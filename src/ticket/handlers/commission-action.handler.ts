@@ -12,7 +12,7 @@ import {
   TextInputStyle,
 } from 'discord.js';
 import { TicketService } from '../ticket.service.js';
-import { TicketStatus } from '../../core/entities/index.js';
+import { TicketStatus, TicketStatusLabel } from '../../core/entities/index.js';
 import { buildTicketEmbed } from '../ticket-embed.js';
 
 @Injectable()
@@ -47,7 +47,7 @@ export class CommissionActionHandler {
       .setPlaceholder('새로운 상태 선택')
       .addOptions(
         Object.values(TicketStatus).map(status => ({
-          label: status,
+          label: TicketStatusLabel[status],
           value: status,
         }))
       );
@@ -80,14 +80,14 @@ export class CommissionActionHandler {
 
     // Ephemeral response to admin
     await interaction.reply({
-      content: `✅ 상태가 **${newStatus}**(으)로 변경되었습니다.`,
+      content: `✅ 상태가 **${TicketStatusLabel[newStatus]}**(으)로 변경되었습니다.`,
       flags: MessageFlags.Ephemeral,
     });
 
     // Public notification to requester
     if (interaction.channel && 'send' in interaction.channel) {
       await interaction.channel.send({
-        content: `<@${ticket.requester}> 의뢰 상태가 **${newStatus}**(으)로 변경되었습니다.`,
+        content: `<@${ticket.requester}> 의뢰 상태가 **${TicketStatusLabel[newStatus]}**(으)로 변경되었습니다.`,
       });
     }
 

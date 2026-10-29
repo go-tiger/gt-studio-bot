@@ -1,5 +1,5 @@
 import { EmbedBuilder } from 'discord.js';
-import { Ticket, TicketLauncher } from '../core/entities/index.js';
+import { Ticket, TicketLauncher, TicketStatusLabel } from '../core/entities/index.js';
 
 export function buildTicketEmbed(ticket: Ticket, launcher: TicketLauncher): EmbedBuilder {
   const deadline = new Date(launcher.deadline);
@@ -9,7 +9,7 @@ export function buildTicketEmbed(ticket: Ticket, launcher: TicketLauncher): Embe
     .setColor(0x5865F2)
     .addFields(
       { name: '의뢰자', value: `<@${ticket.requester}>`, inline: true },
-      { name: '상태', value: ticket.status, inline: true },
+      { name: '상태', value: TicketStatusLabel[ticket.status], inline: true },
       { name: '가격', value: ticket.price ? `${ticket.price.toLocaleString()}원` : '미정', inline: true },
       { name: '런처 이름', value: launcher.launcherName, inline: true },
       { name: '폴더명', value: launcher.folderName, inline: true },
