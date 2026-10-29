@@ -77,6 +77,7 @@ export class TicketService {
     minecraftVersion: string;
     modLoader: ModLoader;
     loaderVersion: string;
+    launcherType: string;
     deadline: Date;
   }): Promise<Ticket> {
     return this.dataSource.transaction(async (manager) => {
@@ -97,6 +98,7 @@ export class TicketService {
         minecraftVersion: data.minecraftVersion,
         modLoader: data.modLoader,
         loaderVersion: data.loaderVersion,
+        launcherType: data.launcherType,
         deadline: data.deadline,
       });
       await manager.save(ticketLauncher);

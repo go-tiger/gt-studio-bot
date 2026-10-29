@@ -37,6 +37,9 @@ export class TicketLauncher {
   @Column()
   loaderVersion: string;
 
+  @Column({ nullable: true })
+  launcherType: string;
+
   @Column()
   deadline: Date;
 }

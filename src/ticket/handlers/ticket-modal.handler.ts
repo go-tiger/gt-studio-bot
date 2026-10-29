@@ -6,12 +6,12 @@ import {
   ButtonBuilder,
   ButtonStyle,
   ChannelType,
-  EmbedBuilder,
   MessageFlags,
   PermissionFlagsBits,
 } from 'discord.js';
 import { TicketService } from '../ticket.service.js';
-import { ModLoader, TicketStatus } from '../../core/entities/index.js';
+import { ModLoader } from '../../core/entities/index.js';
+import { buildTicketEmbed } from '../ticket-embed.js';
 
 const DEADLINE_DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
 
@@ -98,6 +98,7 @@ export class TicketModalHandler {
       minecraftVersion: mcVersion,
       modLoader,
       loaderVersion,
+      launcherType,
       deadline,
     });
 
@@ -137,26 +138,8 @@ export class TicketModalHandler {
 
     await this.ticketService.setTicketChannel(ticket.id, ticketChannel.id);
 
-    // Create info embed
-    const embed = new EmbedBuilder()
-      .setTitle('📋 의뢰 정보')
-      .setColor(0x5865F2)
-      .addFields(
-        { name: '의뢰자', value: `<@${interaction.user.id}>`, inline: true },
-        { name: '상태', value: TicketStatus.PENDING, inline: true },
-        { name: '​', value: '​', inline: true },
-        { name: '런처 이름', value: launcherName, inline: true },
-        { name: '폴더명', value: folderName, inline: true },
-        { name: '마인크래프트 버전', value: mcVersion, inline: true },
-        { name: '모드로더', value: `${modLoader} ${loaderVersion}`, inline: true },
-        { name: '런처 타입', value: `${launcherType} 타입`, inline: true },
-        { name: '희망 기한', value: `<t:${Math.floor(deadline.getTime() / 1000)}:D>`, inline: true },
-      )
-      .setTimestamp();
-
-    if (additionalNotes) {
-      embed.addFields({ name: '추가 요청사항', value: additionalNotes });
-    }
+    const launcher = await this.ticketService.getTicketLauncherByTicketId(ticket.id);
+    const embed = buildTicketEmbed(ticket, launcher!);
 
     // Admin action buttons
     const actionRow = new ActionRowBuilder<ButtonBuilder>().addComponents(

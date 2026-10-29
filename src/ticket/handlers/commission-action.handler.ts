@@ -5,7 +5,6 @@ import {
   ActionRowBuilder,
   ButtonBuilder,
   ButtonStyle,
-  EmbedBuilder,
   MessageFlags,
   ModalBuilder,
   StringSelectMenuBuilder,
@@ -14,6 +13,7 @@ import {
 } from 'discord.js';
 import { TicketService } from '../ticket.service.js';
 import { TicketStatus } from '../../core/entities/index.js';
+import { buildTicketEmbed } from '../ticket-embed.js';
 
 @Injectable()
 export class CommissionActionHandler {
@@ -273,23 +273,7 @@ export class CommissionActionHandler {
 
     if (!botMessage) return;
 
-    const embed = new EmbedBuilder()
-      .setTitle('📋 의뢰 정보')
-      .setColor(0x5865F2)
-      .addFields(
-        { name: '의뢰자', value: `<@${ticket.requester}>`, inline: true },
-        { name: '상태', value: ticket.status, inline: true },
-        { name: '가격', value: ticket.price ? `${ticket.price.toLocaleString()}원` : '미정', inline: true },
-        { name: '런처 이름', value: launcher.launcherName, inline: true },
-        { name: '폴더명', value: launcher.folderName, inline: true },
-        { name: '마인크래프트 버전', value: launcher.minecraftVersion, inline: true },
-        { name: '모드로더', value: `${launcher.modLoader} ${launcher.loaderVersion}`, inline: true },
-      )
-      .setTimestamp();
-
-    if (ticket.note) {
-      embed.addFields({ name: '추가 요청사항', value: ticket.note });
-    }
+    const embed = buildTicketEmbed(ticket, launcher);
 
     await botMessage.edit({ embeds: [embed] });
   }
