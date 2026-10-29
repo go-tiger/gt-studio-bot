@@ -9,7 +9,6 @@ import {
   EmbedBuilder,
   MessageFlags,
   PermissionFlagsBits,
-  TextChannel,
 } from 'discord.js';
 import { SetupOptionsDto } from './setup-options.dto.js';
 import { TicketService } from '../ticket.service.js';
@@ -81,8 +80,14 @@ export class SetupCommand {
     const row = new ActionRowBuilder<ButtonBuilder>().addComponents(button);
 
     // Send message
-    const channel = interaction.channel as TextChannel;
-    const message = await channel.send({
+    if (!interaction.channel?.isSendable()) {
+      return interaction.reply({
+        content: '이 채널에는 메시지를 보낼 수 없습니다.',
+        flags: MessageFlags.Ephemeral,
+      });
+    }
+
+    await interaction.channel.send({
       embeds: [embed],
       components: [row],
     });
