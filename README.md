@@ -11,8 +11,8 @@
 
 ## 기술 스택
 
-- [NestJS](https://nestjs.com) 11
-- [Necord](https://necord.org) 6 / [discord.js](https://discord.js.org) 14
+- [NestJS](https://nestjs.com) 12
+- [Necord](https://necord.org) 7 / [discord.js](https://discord.js.org) 14
 - TypeORM + PostgreSQL
 - Docker / GitHub Actions (GHCR 배포)
 
