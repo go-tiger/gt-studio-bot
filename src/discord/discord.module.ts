@@ -3,6 +3,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { NecordModule } from 'necord';
 import { IntentsBitField } from 'discord.js';
 import { PingCommand } from './commands/ping.command.js';
+import { ErrorEvent } from './events/error.event.js';
 
 @Module({
   imports: [
@@ -20,6 +21,6 @@ import { PingCommand } from './commands/ping.command.js';
       }),
     }),
   ],
-  providers: [PingCommand],
+  providers: [PingCommand, ErrorEvent],
 })
 export class DiscordModule {}
